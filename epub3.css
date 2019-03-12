@@ -1,0 +1,270 @@
+/* 
+Credits:
+
+Some code was adapted from or inspired by:
+Blitz (https://github.com/FriendsOfEpub/Blitz),
+Standard Ebooks (https://standardebooks.org/),
+Matt Garish and Markus Gylling's book: EPUB 3 Best Practices (http://shop.oreilly.com/product/0636920024897.do).
+
+Other rules were created through trial and error by /u/christmas_cavalier.
+*/
+
+/* This stylesheet was created for use in EPUB3 publications. It should downgrade somewhat gracefully (I think), but it shouldn't be used in an ePub 2 publication on purpose. */
+
+@namespace epub url(http://www.idpf.org/2007/ops);
+/* if you need to style epub:type */
+
+html {
+  /* Don't use it for styling, used as selector which can take a punch if anything goes wrong above */
+}
+
+/* Reset some stuff */
+
+@page {
+    margin: 30px 30px 20px 30px;
+    /* Recommended by Barnes & Noble in this old spec: https://simg1.imagesbn.com/pimages/pubit/support/pubit_epub_formatting_guide.pdf */
+    padding: 0;
+}
+
+body {
+    font-size: 100%;
+    line-height: 1.5;
+    /* iBooks and Kobo support widows and orphans */
+    widows: 2;
+    orphans: 2;
+}
+
+body * {
+    line-height: inherit;
+}
+
+h1,
+h2,
+h3,
+table,
+th,
+td {
+    adobe-hyphenate: none;
+    /* proprietary for Legacy RMSDK */
+    -ms-hyphens: none;
+    -moz-hyphens: none;
+    -webkit-hyphens: none;
+    -epub-hyphens: none;
+    hyphens: none;
+}
+
+h1,
+h2,
+h3,
+hr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    page-break-after: avoid;
+    break-after: avoid;
+	text-align: center;
+}
+
+/* Just in case ePub 2 devices default to `display: inline` */
+article,
+aside,
+figure,
+figcaption,
+footer,
+header,
+main,
+nav,
+section {
+    display: block;
+}
+
+/* Headings */
+
+h1 {
+    font-size: 1.55em;
+    margin-top: 2em;
+    margin-bottom: 1.5em;
+}
+
+h2 {
+    font-size: 1.3em;
+    margin-top: 2em;
+    margin-bottom: 1.5em;
+}
+
+h3 {
+    font-size: 1.15em;
+    margin-top: 2em;
+    margin-bottom: 1.5em;
+}
+
+/* For reading systems that don’t support OpenType features, use `font-variant`. */
+h1,
+h2,
+h3 {
+    font-variant: small-caps;
+}
+
+/* Progressively enhance with `font-feature-settings` if `font-variant-caps` isn’t supported. */
+@supports not (font-variant-caps: small-caps) {
+    h1,
+    h2,
+    h3 {
+        font-variant: normal;
+        font-feature-settings: "smcp", "onum", "pnum";
+    }
+}
+
+/* Otherwise, and ideally, use `font-variant-caps`. */
+@supports (font-variant-caps: small-caps) {
+    h1,
+    h2,
+    h3 {
+        font-variant: normal;
+        font-variant-caps: small-caps;
+    }
+}
+
+/* Horizintal rules (Context Breaks) */
+
+hr {
+    width: 25%;
+    margin-left: 37.5%;
+    margin-top: 1.4375em;
+    margin-bottom: 1.4375em;
+    height: 0;
+    border: none;
+    border-top: 0.125em solid currentColor;
+    /* currentColor = color of text (getting around night mode) */
+    opacity: 0.5;
+    /* Opacity -> grayscale. If opacity is declared for too many elements in a XHTML file, performance of legacy RMSDK takes a hit */
+}
+
+/* Blank-line context change */
+hr.transition {
+  width: 100%;
+  margin: 0;
+  height: 1.5em;
+  border: none;
+  background: none;
+  /* Note: overridden in night mode excepted when using linear-gradient */
+}
+
+/* Images */
+
+/* Scale images to prevent them from overflowing off the screen */
+img {
+    width: auto;
+    max-width: 100%;
+    /* Note: KF8 doesn't support max-width hence "width: auto;" as fallback */
+    max-height: 95%;
+    /* Max value iBooks enforces */
+    object-fit: contain;
+}
+
+/* Center and prevent page breaks inside images  */
+div.imgBox {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    text-align: center;
+}
+
+/* Allows calibre to move past cover in one click. Not sure exactly why it works. ¯\_(ツ)_/¯ */
+div#cover img {
+    vertical-align: top;
+}
+
+/* Miscellaneous */
+
+/* Superscript references to endnotes. */
+a[epub|type="noteref"] {
+    font-size: 75%;
+    line-height: 1.2;
+    vertical-align: super;
+	/* Fallback */
+    vertical-align: 33%;
+}
+
+/* Break words if they're too long */
+p,
+li {
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+    -epub-hyphens: auto;
+    overflow-wrap: break-word;
+    /* For shounen-battle-esque yelling */
+}
+
+/* Display links without underline. A personal preference */
+a[href] {
+    text-decoration: none;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.align-right {
+    text-align: right;
+}
+
+/* Display chapter subtitle on new line */
+span[epub|type~="subtitle"] {
+    display: block;
+    font-weight: normal;
+}
+
+ul,
+ol {
+    margin: 1.5em 0;
+    padding-left: 5%;
+}
+
+li[epub|type~="rearnote"] {
+    margin-bottom: 1em;
+}
+
+.caption {
+    font-size: 0.95em;
+}
+
+/* Use CSS margins instead of <p>&#160</p> or <p><br/></p> */
+.softbreakAfter {
+	margin-bottom: 3em;
+}
+
+p.credit {
+    font-family: sans-serif;
+    font-size: 1.1em;
+    text-indent: 0em;
+    text-align: center;
+}
+
+p.secondaryCredit {
+	text-align: center;
+	text-indent: none;
+	margin-top: 4em;
+}
+
+/* EPUB3 Navigation Document */
+
+/* Following EPUB 3 spec by the letter (applies to RS but let’s make sure it is respected because we never know) */
+nav[epub|type~="toc"] ol {
+    list-style: none !important;
+}
+
+/* [Opinionated] Default to prevent bloat in case linear="no" is rendered as linear="yes" */
+nav[epub|type~="landmarks"],
+nav[epub|type~="page-list"] {
+    display: none;
+}
+
+nav ol li a {
+    color: inherit;
+    text-decoration: none;
+}
+
+nav ol li {
+    margin-top: 0.5em;
+}
