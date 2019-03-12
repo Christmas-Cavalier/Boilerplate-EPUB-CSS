@@ -23,9 +23,7 @@ h2,
 h3,
 hr {
     page-break-inside: avoid;
-    break-inside: avoid;
     page-break-after: avoid;
-    break-after: avoid;
     text-align: center;
 }
 
@@ -60,8 +58,6 @@ hr {
     border: none;
     border-top: 0.125em solid currentColor;
     /* currentColor = color of text (getting around night mode) */
-    opacity: 0.5;
-    /* Opacity -> grayscale. If opacity is declared for too many elements in a XHTML file, performance of legacy RMSDK takes a hit */
 }
 
 /* Images */
@@ -80,7 +76,6 @@ img {
 
 div.imgBox {
     page-break-inside: avoid;
-    break-inside: avoid;
     text-align: center;
 }
 
@@ -111,7 +106,6 @@ li {
     -webkit-hyphens: auto;
     -moz-hyphens: auto;
     -ms-hyphens: auto;
-    hyphens: auto;
 }
 
 /* Override default alignment */
